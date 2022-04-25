@@ -14,11 +14,38 @@
   <nav class="navbar navbar-dark fixed-top">
     <a class="navbar-brand" href="#">Double Major Course Planner</a>
   </nav>
-  <div id="loginPage" class="container page-container">
-    <img id="roseLogo" src="images/rose_logo.png" alt="">
-    <button id="rosefireButton" type="button" class="btn">Sign in with Rosefire</button>
-  </div>
+  <div id="majorSelectionPage" class="container page-container">
+    <form>
+      <div class="form-group">
+        <label id="majorSelectLabel" for="exampleSelect1">Major 1</label>
+        <br>
+        <select class="form-control" id="major1Select">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+    </form>
+    <form>
+      <div class="form-group">
+        <label id="majorSelectLabel" for="exampleSelect1">Major 2</label>
+        <br>
+        <select class="form-control" id="major2Select">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+    </form>
+    <button type="button" class="btn">Add Another Major</button>
+    <button type="button" class="btn">Continue</button>
 
+  </div>
+  
 
   <script src="scripts/jquery.min.js"></script>
   <script src="scripts/popper.js"></script>
