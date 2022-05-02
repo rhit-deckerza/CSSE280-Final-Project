@@ -11,17 +11,125 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-dark fixed-top">
+  <nav class="navbar navbar-dark fixed-top justify-content-start">
+    <button class="navbar-toggler" type="button" data-toggle="drawer" data-target="#dw-s1">
+      <span class="sr-only">Toggle drawer</span>
+      <i class="material-icons">menu</i>
+    </button>
+    &nbsp;
+    &nbsp;
     <a class="navbar-brand" href="#">Double Major Course Planner</a>
   </nav>
-  <div id="coursePlanningPage" class="container-fluid page-container row no-gutters">
-    <div id="requiredMajorsColumn" class="col-3 justify-content-center">
-      <div class="card col-10" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+  <div id="coursePlanningPage" class="page-container">
+    <div id="requiredMajorsColumnContainer" class="bmd-layout-container bmd-drawer-f-l justify-content-center">
+      <div id="dw-s1" class="bmd-layout-drawer bg-faded">
+        <header>
+          <a class="navbar-brand">Required Courses</a>
+        </header>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">CSSE220</h5>
+            <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">CSSE220</h5>
+            <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">CSSE220</h5>
+            <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">CSSE220</h5>
+            <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">CSSE220</h5>
+            <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+          </div>
         </div>
       </div>
+      <main class="bmd-layout-content">
+        <div id="requiredMajorsColumn" class="container">
+          <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect02">
+              <option selected>Freshman Year</option>
+              <option value="1">Sophomore Year</option>
+              <option value="2">Junior Year</option>
+              <option value="3">Senior Year</option>
+              <option value="4">Fifth Year</option>
+            </select>
+            &nbsp;
+            &nbsp;
+            <div class="input-group-append">
+              <button id="exportToForm" type="button" class="btn">Export to form</button>
+            </div>
+          </div>
+          <div id="quarterColumns" class = "row">
+            <div class = "col-3">
+              <h3>FALL</h3>
+              <div id="fallContainer" class = "bmd-layout-container"></div>
+            </div>
+            <div class = "col-3">
+              <h3>WINTER</h3>
+              <div id="winterContainer" class = "bmd-layout-container"></div>
+            </div>
+            <div class = "col-3">
+              <h3>SPRING</h3>
+              <div id="springContainer" class = "bmd-layout-container"></div>
+            </div>
+            <div class = "col-3">
+              <h3>SUMMER</h3>
+              <div id="summerContainer" class = "bmd-layout-container">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">CSSE220</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">CSSE220</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">CSSE220</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">CSSE220</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">CSSE220</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">CSSE220</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">CSSE120</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
