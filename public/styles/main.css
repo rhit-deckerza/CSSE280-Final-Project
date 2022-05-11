@@ -15,6 +15,7 @@ body {
     max-width: 350px;
     display: block;
     margin: auto;
+    margin-top: 100px;
 }
 
 #rosefireButton{
@@ -95,4 +96,7 @@ body {
 
 .card-subtitle{
     font-size: 1.25vw;
+}
+#majorSelectionPage{
+    margin-top: 100px;
 }
