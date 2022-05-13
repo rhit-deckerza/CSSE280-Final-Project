@@ -135,6 +135,7 @@ rhit.FbAuthManager = class {
 	  this._user = null;
 	  this._ref = firebase.firestore().collection(rhit.FB_COLLECTION_USER);
 	}
+
 	
 	beginListening(changeListener) {
 		firebase.auth().onAuthStateChanged( (user) => {
@@ -173,13 +174,15 @@ rhit.FbAuthManager = class {
 						Summer:[],
 						Winter:[]
 					}};
+				const requiredCourses = [];
 				const majors = [];
 				userRef.get().then((doc) => {
 					if (!doc.exists) {
 						this._ref.doc(this._user.uid).set({
 							uid: this._user.uid,
 							plan: plan,
-							majors: majors
+							majors: majors,
+							requiredCourses: requiredCourses
 						});
 					}
 			});
@@ -232,8 +235,188 @@ rhit.CoursePlanningController = class {
 		this._userRef = firebase.firestore().collection(rhit.FB_COLLECTION_USER).doc(rhit.fbAuthManager.uid);
 		this._majorRef = firebase.firestore().collection(rhit.FB_COLLECTION_MAJORS);
 		this.populateRequired();
+		this.populateYears("Y1");
+		this.selectChangeListen();
 	}
 
+	selectChangeListen(){
+		document.querySelector("#yearSelect").addEventListener("change", function () {
+			this.populateYears(document.querySelector("#yearSelect").value);
+		}.bind(this));
+	}
+
+	populateYears(currYear){
+		this._userRef.get().then((doc) => {
+			if (doc.exists){
+				while (document.getElementById("fallContainer").firstChild) {
+					document.getElementById("fallContainer").removeChild(document.getElementById("fallContainer").firstChild);
+				}
+				while (document.getElementById("winterContainer").firstChild) {
+					document.getElementById("winterContainer").removeChild(document.getElementById("winterContainer").firstChild);
+				}
+				while (document.getElementById("springContainer").firstChild) {
+					document.getElementById("springContainer").removeChild(document.getElementById("springContainer").firstChild);
+				}
+				while (document.getElementById("summerContainer").firstChild) {
+					document.getElementById("summerContainer").removeChild(document.getElementById("summerContainer").firstChild);
+				}
+				doc.data().plan[currYear].Fall.forEach(function(course){
+					let html = `<div id="${course}" class="card">
+					<div class="card-body">
+					<h5 class="card-title">${course}</h5>
+					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
+					</div>
+				</div>`
+					let element = htmlToElement(html);
+					document.getElementById("fallContainer").appendChild(element);
+					document.getElementById(course).addEventListener("mouseover", function () {
+						document.getElementById(course).querySelector(".btn").classList.remove("d-none");
+					}.bind(this));
+					document.getElementById(course).addEventListener("mouseout", function () {
+						document.getElementById(course).querySelector(".btn").classList.add("d-none");
+					}.bind(this));
+					document.getElementById(course + "Remove").addEventListener("click", function () {
+						this._userRef.get().then(function (doc) {
+							if (doc.exists){
+								const planPart = doc.data().plan;
+								const currRequiredCourses = doc.data().requiredCourses;
+								currRequiredCourses.unshift(course);
+								for (let i = 0; i < planPart[currYear].Fall.length; i++){
+									if (planPart[currYear].Fall[i] === course){
+										planPart[currYear].Fall.splice(i, 1);
+										break;
+									}
+								}
+								this._userRef.update({
+									plan: planPart,
+									requiredCourses: currRequiredCourses
+								}).then(function() {
+									this.populateRequired();
+									this.populateYears(currYear);
+								}.bind(this));
+							}
+						}.bind(this));
+					}.bind(this));
+				}.bind(this));
+				doc.data().plan[currYear].Winter.forEach(function(course){
+					let html = `<div id="${course}" class="card">
+					<div class="card-body">
+					<h5 class="card-title">${course}</h5>
+					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
+					</div>
+				</div>`
+					let element = htmlToElement(html);
+					document.getElementById("winterContainer").appendChild(element);
+					document.getElementById(course).addEventListener("mouseover", function () {
+						document.getElementById(course).querySelector(".btn").classList.remove("d-none");
+					}.bind(this));
+					document.getElementById(course).addEventListener("mouseout", function () {
+						document.getElementById(course).querySelector(".btn").classList.add("d-none");
+					}.bind(this));
+					document.getElementById(course + "Remove").addEventListener("click", function () {
+						this._userRef.get().then(function (doc) {
+							if (doc.exists){
+								const planPart = doc.data().plan;
+								const currRequiredCourses = doc.data().requiredCourses;
+								currRequiredCourses.unshift(course);
+								for (let i = 0; i < planPart[currYear].Winter.length; i++){
+									if (planPart[currYear].Winter[i] === course){
+										planPart[currYear].Winter.splice(i, 1);
+										break;
+									}
+								}
+								this._userRef.update({
+									plan: planPart,
+									requiredCourses: currRequiredCourses
+								}).then(function() {
+									this.populateRequired();
+									this.populateYears(currYear);
+								}.bind(this));
+							}
+						}.bind(this));
+					}.bind(this));
+				}.bind(this));
+				doc.data().plan[currYear].Spring.forEach(function(course){
+					let html = `<div id="${course}" class="card">
+					<div class="card-body">
+					<h5 class="card-title">${course}</h5>
+					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
+					</div>
+				</div>`
+					let element = htmlToElement(html);
+					document.getElementById("springContainer").appendChild(element);
+					document.getElementById(course).addEventListener("mouseover", function () {
+						document.getElementById(course).querySelector(".btn").classList.remove("d-none");
+					}.bind(this));
+					document.getElementById(course).addEventListener("mouseout", function () {
+						document.getElementById(course).querySelector(".btn").classList.add("d-none");
+					}.bind(this));
+					document.getElementById(course + "Remove").addEventListener("click", function () {
+						this._userRef.get().then(function (doc) {
+							if (doc.exists){
+								const planPart = doc.data().plan;
+								const currRequiredCourses = doc.data().requiredCourses;
+								currRequiredCourses.unshift(course);
+								for (let i = 0; i < planPart[currYear].Spring.length; i++){
+									if (planPart[currYear].Spring[i] === course){
+										planPart[currYear].Spring.splice(i, 1);
+										break;
+									}
+								}
+								this._userRef.update({
+									plan: planPart,
+									requiredCourses: currRequiredCourses
+								}).then(function() {
+									this.populateRequired();
+									this.populateYears(currYear);
+								}.bind(this));
+							}
+						}.bind(this));
+					}.bind(this));
+				}.bind(this));
+				doc.data().plan[currYear].Summer.forEach(function(course){
+					let html = `<div id="${course}" class="card">
+					<div class="card-body">
+					<h5 class="card-title">${course}</h5>
+					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
+					</div>
+				</div>`
+					let element = htmlToElement(html);
+					document.getElementById("summerContainer").appendChild(element);
+					document.getElementById(course).addEventListener("mouseover", function () {
+						document.getElementById(course).querySelector(".btn").classList.remove("d-none");
+					}.bind(this));
+					document.getElementById(course).addEventListener("mouseout", function () {
+						document.getElementById(course).querySelector(".btn").classList.add("d-none");
+					}.bind(this));
+					document.getElementById(course + "Remove").addEventListener("click", function () {
+						this._userRef.get().then(function (doc) {
+							if (doc.exists){
+								const planPart = doc.data().plan;
+								const currRequiredCourses = doc.data().requiredCourses;
+								currRequiredCourses.unshift(course);
+								for (let i = 0; i < planPart[currYear].Summer.length; i++){
+									if (planPart[currYear].Summer[i] === course){
+										planPart[currYear].Summer.splice(i, 1);
+										break;
+									}
+								}
+								this._userRef.update({
+									plan: planPart,
+									requiredCourses: currRequiredCourses
+								}).then(function() {
+									this.populateRequired();
+									this.populateYears(currYear);
+								}.bind(this));
+							}
+						}.bind(this));
+					}.bind(this));
+				}.bind(this));
+			}
+		}).catch((error) => {
+			console.log("Error getting document:", error);
+		});
+	}
 	populateRequired(){
 		this._userRef.get().then((doc) => {
 			if (doc.exists) {
@@ -247,16 +430,26 @@ rhit.CoursePlanningController = class {
 
 	getMajorData(majors){
 		let allClasses = [];
-		let allPrereqs = [];
 		for (let i = 0; i < majors.length; i++) {
 			let major = majors[i];
 			this._majorRef.doc(major).get().then((doc) => {
 				if (doc.exists) {
 					allClasses = allClasses.concat(doc.data().Classes);
-					allPrereqs.push(doc.data().Prerequisites);
 				}
 				if (i === majors.length - 1) {
-					this.placeReqCards(noDuplicates(allClasses), allPrereqs);
+					let allClassesNoDups = noDuplicates(allClasses);
+					this._userRef.get().then((doc) => {
+						if (doc.exists) {
+							if (doc.data().requiredCourses.length === 0) {
+								this._userRef.update({
+									requiredCourses: allClassesNoDups
+								});
+								this.placeReqCards(allClassesNoDups);
+							}else{
+								this.placeReqCards(doc.data().requiredCourses);
+							}
+						}
+					});
 				}
 			}).catch((error) => {
 				console.log("Error getting document:", error);
@@ -264,32 +457,216 @@ rhit.CoursePlanningController = class {
 		}
 	}
 
-	placeReqCards(allClasses, allPrereqs){
+	placeReqCards(allClasses){
 		while (document.getElementById("dw-s1").firstChild) {
 			document.getElementById("dw-s1").removeChild(document.getElementById("dw-s1").firstChild);
 		}
 		for (let i = 0; i < allClasses.length; i++) {
 			let className = allClasses[i];
-			let prereqs = allPrereqs[0][className] || allPrereqs[1][className] || "none";
-			let prereqsString = "";
-			if (prereqs !== "none") {
-				for (let j = 0; j < prereqs.length; j++) {
-					if (j === prereqs.length - 1) {
-						prereqsString += prereqs[j];
-					} else {
-						prereqsString += prereqs[j] + ", ";
-					}
-				}
-			}
 			let html = `<div id="${className}" class="card">
 			<div class="card-body">
 			  <h5 class="card-title">${className}</h5>
-			  <h6 class="card-subtitle mb-2 text-muted">${prereqsString}</h6>
 			</div>
 		  </div>`
 			let element = htmlToElement(html);
 			document.getElementById("dw-s1").appendChild(element);
+			document.getElementById(className).addEventListener("click", function () {
+				document.querySelectorAll(".selected").forEach(function (card) {
+					console.log("Here");
+					card.classList.remove("selected");
+				});
+				document.getElementById(className).classList.add("selected");
+				document.getElementById("fallContainer").classList.add("selected");
+				document.getElementById("springContainer").classList.add("selected");
+				document.getElementById("summerContainer").classList.add("selected");
+				document.getElementById("winterContainer").classList.add("selected");
+				this.activatePlace();
+			}.bind(this));
 		}
+	}
+
+	activatePlace(){
+		console.log("LOl");
+		document.getElementById("fallContainer").addEventListener("click", function () {
+			this._userRef.get().then((doc) => {
+				if (doc.exists) {
+					let currPlan = doc.data().plan;
+					let currRequiredCourses = doc.data().requiredCourses;
+					let currYear = document.getElementById("yearSelect").value;
+					let selectedClass = document.querySelector(".selected.card").id;
+					switch (currYear) {
+						case "Y1":
+							currPlan.Y1.Fall.push(selectedClass);
+							break;
+						case "Y2":
+							currPlan.Y2.Fall.push(selectedClass);
+							break;
+						case "Y3":
+							currPlan.Y3.Fall.push(selectedClass);
+							break;
+						case "Y4":
+							currPlan.Y4.Fall.push(selectedClass);
+							break;
+						case "Y5":
+							currPlan.Y5.Fall.push(selectedClass);
+							break;
+					}
+					for( var i = 0; i < currRequiredCourses.length; i++){ 
+    
+						if ( currRequiredCourses[i] === selectedClass) { 
+							currRequiredCourses.splice(i, 1); 
+						}
+					
+					}
+					this._userRef.update({
+						plan: currPlan,
+						requiredCourses: currRequiredCourses
+					}).then(() => {
+						document.querySelectorAll(".selected").forEach(function (card) {
+							card.classList.remove("selected");
+						});
+						this.populateYears(currYear);
+						this.populateRequired();
+					});
+				}
+					
+			});
+		}.bind(this));
+		document.getElementById("summerContainer").addEventListener("click", function () {
+			this._userRef.get().then((doc) => {
+				if (doc.exists) {
+					let currPlan = doc.data().plan;
+					let currRequiredCourses = doc.data().requiredCourses;
+					let currYear = document.getElementById("yearSelect").value;
+					let selectedClass = document.querySelector(".selected.card").id;
+					switch (currYear) {
+						case "Y1":
+							currPlan.Y1.Summer.push(selectedClass);
+							break;
+						case "Y2":
+							currPlan.Y2.Summer.push(selectedClass);
+							break;
+						case "Y3":
+							currPlan.Y3.Summer.push(selectedClass);
+							break;
+						case "Y4":
+							currPlan.Y4.Summer.push(selectedClass);
+							break;
+						case "Y5":
+							currPlan.Y5.Summer.push(selectedClass);
+							break;
+					}
+					for( var i = 0; i < currRequiredCourses.length; i++){ 
+    
+						if ( currRequiredCourses[i] === selectedClass) { 
+							currRequiredCourses.splice(i, 1); 
+						}
+					
+					}
+					this._userRef.update({
+						plan: currPlan,
+						requiredCourses: currRequiredCourses
+					}).then(() => {
+						document.querySelectorAll(".selected").forEach(function (card) {
+							card.classList.remove("selected");
+						});
+						this.populateYears(currYear);
+						this.populateRequired();
+					});
+				}
+					
+			});
+		}.bind(this));
+		document.getElementById("springContainer").addEventListener("click", function () {
+			this._userRef.get().then((doc) => {
+				if (doc.exists) {
+					let currPlan = doc.data().plan;
+					let currRequiredCourses = doc.data().requiredCourses;
+					let currYear = document.getElementById("yearSelect").value;
+					let selectedClass = document.querySelector(".selected.card").id;
+					switch (currYear) {
+						case "Y1":
+							currPlan.Y1.Spring.push(selectedClass);
+							break;
+						case "Y2":
+							currPlan.Y2.Spring.push(selectedClass);
+							break;
+						case "Y3":
+							currPlan.Y3.Spring.push(selectedClass);
+							break;
+						case "Y4":
+							currPlan.Y4.Spring.push(selectedClass);
+							break;
+						case "Y5":
+							currPlan.Y5.Spring.push(selectedClass);
+							break;
+					}
+					for( var i = 0; i < currRequiredCourses.length; i++){ 
+    
+						if ( currRequiredCourses[i] === selectedClass) { 
+							currRequiredCourses.splice(i, 1); 
+						}
+					
+					}
+					this._userRef.update({
+						plan: currPlan,
+						requiredCourses: currRequiredCourses
+					}).then(() => {
+						document.querySelectorAll(".selected").forEach(function (card) {
+							card.classList.remove("selected");
+						});
+						this.populateYears(currYear);
+						this.populateRequired();
+					});
+				}
+					
+			});
+		}.bind(this));
+		document.getElementById("winterContainer").addEventListener("click", function () {
+			this._userRef.get().then((doc) => {
+				if (doc.exists) {
+					let currPlan = doc.data().plan;
+					let currRequiredCourses = doc.data().requiredCourses;
+					let currYear = document.getElementById("yearSelect").value;
+					let selectedClass = document.querySelector(".selected.card").id;
+					switch (currYear) {
+						case "Y1":
+							currPlan.Y1.Winter.push(selectedClass);
+							break;
+						case "Y2":
+							currPlan.Y2.Winter.push(selectedClass);
+							break;
+						case "Y3":
+							currPlan.Y3.Winter.push(selectedClass);
+							break;
+						case "Y4":
+							currPlan.Y4.Winter.push(selectedClass);
+							break;
+						case "Y5":
+							currPlan.Y5.Winter.push(selectedClass);
+							break;
+					}
+					for( var i = 0; i < currRequiredCourses.length; i++){ 
+    
+						if ( currRequiredCourses[i] === selectedClass) { 
+							currRequiredCourses.splice(i, 1); 
+						}
+					
+					}
+					this._userRef.update({
+						plan: currPlan,
+						requiredCourses: currRequiredCourses
+					}).then(() => {
+						document.querySelectorAll(".selected").forEach(function (card) {
+							card.classList.remove("selected");
+						});
+						this.populateYears(currYear);
+						this.populateRequired();
+					});
+				}
+					
+			});
+		}.bind(this));
 	}
 }
 
@@ -347,5 +724,7 @@ function noDuplicates(a) {
         return seen.hasOwnProperty(item) ? false : (seen[item] = true);
     });
 }
+
+
 
 rhit.main();
