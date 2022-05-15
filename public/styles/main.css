@@ -100,3 +100,12 @@ body {
 #majorSelectionPage{
     margin-top: 100px;
 }
+
+#signOut{
+    margin: 0;
+    margin-left: auto;
+}
+
+.selected{
+    border: 5px solid #800000;
+}
