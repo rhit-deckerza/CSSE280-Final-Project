@@ -67,7 +67,7 @@ rhit.MajorSelectionController = class{
 		document.getElementById("addMajor").addEventListener("click", function () {
 			rhit.majorSelectionManager.majorNumber++;
 			const html = `<form>
-		<div id="major${rhit.majorSelectionManager.majorNumber}"majorclass="form-group">
+		<div id="major${rhit.majorSelectionManager.majorNumber}" class="form-group bmd-form-group is-filled">
 		  <label id="majorSelectLabel" for="majorSelect${rhit.majorSelectionManager.majorNumber}">Major ${rhit.majorSelectionManager.majorNumber}</label>
 		  <br>
 		  <select class="form-control" name="majorSelect${rhit.majorSelectionManager.majorNumber}" id="major${rhit.majorSelectionManager.majorNumber}Select">
@@ -96,15 +96,18 @@ rhit.MajorSelectionController = class{
 			if (findDuplicates(majors).length == 0){
 				firebase.firestore().collection(rhit.FB_COLLECTION_USER).doc(rhit.fbAuthManager.uid).update({
 					majors: majors
+				}).then( () => {
+					window.location.href = "/coursePlanning.html";
 				}).catch(function(error) {
 					console.log("Error writing document: ", error);
 				});
-				window.location.href = "/coursePlanning.html";
+				
 			}else{
 				alert("You cannot select the same major twice");
 			}
 		});
 	}
+
 
 	updateMajors() {
 		for (let i = 1; i <= rhit.majorSelectionManager.majorNumber; i++) {
@@ -347,10 +350,10 @@ rhit.CoursePlanningController = class {
 					document.getElementById("springContainer").appendChild(element);
 					document.getElementById(course).addEventListener("mouseover", function () {
 						document.getElementById(course).querySelector(".btn").classList.remove("d-none");
-					}.bind(this));
+					});
 					document.getElementById(course).addEventListener("mouseout", function () {
 						document.getElementById(course).querySelector(".btn").classList.add("d-none");
-					}.bind(this));
+					});
 					document.getElementById(course + "Remove").addEventListener("click", function () {
 						this._userRef.get().then(function (doc) {
 							if (doc.exists){
@@ -512,11 +515,9 @@ rhit.CoursePlanningController = class {
 							break;
 					}
 					for( var i = 0; i < currRequiredCourses.length; i++){ 
-    
 						if ( currRequiredCourses[i] === selectedClass) { 
 							currRequiredCourses.splice(i, 1); 
 						}
-					
 					}
 					this._userRef.update({
 						plan: currPlan,
@@ -529,7 +530,6 @@ rhit.CoursePlanningController = class {
 						this.populateRequired();
 					});
 				}
-					
 			});
 		}.bind(this));
 		document.getElementById("summerContainer").addEventListener("click", function () {
@@ -570,6 +570,7 @@ rhit.CoursePlanningController = class {
 						document.querySelectorAll(".selected").forEach(function (card) {
 							card.classList.remove("selected");
 						});
+						this.populateYears(currYear);
 						this.populateYears(currYear);
 						this.populateRequired();
 					});
