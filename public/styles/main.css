@@ -117,3 +117,16 @@ body {
     border-color: #800000;
     box-shadow: inset 0 1px 2px rgb(0 0 0 / 8%), 0 0 5px rgb(129, 0, 0);
 }
+
+.card-subtitle{
+    font-size: 1.11vw;
+}
+
+.btn-danger.custom-file-control:before, .btn.btn-danger {
+    color: #f44336;
+    background-color: white;
+    border-color: #ccc;
+}
+.btn.btn-danger:hover{
+    background-color: white;
+}
