@@ -8,7 +8,6 @@ rhit.arrayToCSV = function (data) {
     	csvContent += row + "\r\n";
 	});
 	rhit.downlaodCSV(csvContent);
-	
 };
 
 rhit.downlaodCSV = function (csvContent) {

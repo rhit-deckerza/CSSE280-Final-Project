@@ -67,7 +67,7 @@ rhit.MajorSelectionController = class{
 		document.getElementById("addMajor").addEventListener("click", function () {
 			rhit.majorSelectionManager.majorNumber++;
 			const html = `<form>
-		<div id="major${rhit.majorSelectionManager.majorNumber}"majorclass="form-group">
+		<div id="major${rhit.majorSelectionManager.majorNumber}" class="form-group bmd-form-group is-filled">
 		  <label id="majorSelectLabel" for="majorSelect${rhit.majorSelectionManager.majorNumber}">Major ${rhit.majorSelectionManager.majorNumber}</label>
 		  <br>
 		  <select class="form-control" name="majorSelect${rhit.majorSelectionManager.majorNumber}" id="major${rhit.majorSelectionManager.majorNumber}Select">
@@ -96,15 +96,18 @@ rhit.MajorSelectionController = class{
 			if (findDuplicates(majors).length == 0){
 				firebase.firestore().collection(rhit.FB_COLLECTION_USER).doc(rhit.fbAuthManager.uid).update({
 					majors: majors
+				}).then( () => {
+					window.location.href = "/coursePlanning.html";
 				}).catch(function(error) {
 					console.log("Error writing document: ", error);
 				});
-				window.location.href = "/coursePlanning.html";
+				
 			}else{
 				alert("You cannot select the same major twice");
 			}
 		});
 	}
+
 
 	updateMajors() {
 		for (let i = 1; i <= rhit.majorSelectionManager.majorNumber; i++) {
@@ -261,9 +264,17 @@ rhit.CoursePlanningController = class {
 					document.getElementById("summerContainer").removeChild(document.getElementById("summerContainer").firstChild);
 				}
 				doc.data().plan[currYear].Fall.forEach(function(course){
+					let indexOfSeperator = course.indexOf(":");
+					let courseTitle = course.substring(0, indexOfSeperator);
+					let courseSubtitle = course.substring(indexOfSeperator + 1);
+					if (indexOfSeperator == -1){
+						courseSubtitle = "";
+						courseTitle = course;
+					}
 					let html = `<div id="${course}" class="card">
 					<div class="card-body">
-					<h5 class="card-title">${course}</h5>
+					<h5 class="card-title">${courseTitle}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">${courseSubtitle}</h6>
 					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
 					</div>
 				</div>`
@@ -299,12 +310,21 @@ rhit.CoursePlanningController = class {
 					}.bind(this));
 				}.bind(this));
 				doc.data().plan[currYear].Winter.forEach(function(course){
+					let indexOfSeperator = course.indexOf(":");
+					let courseTitle = course.substring(0, indexOfSeperator);
+					let courseSubtitle = course.substring(indexOfSeperator + 1);
+					if (indexOfSeperator == -1){
+						courseSubtitle = "";
+						courseTitle = course;
+					}
 					let html = `<div id="${course}" class="card">
 					<div class="card-body">
-					<h5 class="card-title">${course}</h5>
+					<h5 class="card-title">${courseTitle}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">${courseSubtitle}</h6>
 					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
 					</div>
 				</div>`
+				
 					let element = htmlToElement(html);
 					document.getElementById("winterContainer").appendChild(element);
 					document.getElementById(course).addEventListener("mouseover", function () {
@@ -337,9 +357,17 @@ rhit.CoursePlanningController = class {
 					}.bind(this));
 				}.bind(this));
 				doc.data().plan[currYear].Spring.forEach(function(course){
+					let indexOfSeperator = course.indexOf(":");
+					let courseTitle = course.substring(0, indexOfSeperator);
+					let courseSubtitle = course.substring(indexOfSeperator + 1);
+					if (indexOfSeperator == -1){
+						courseSubtitle = "";
+						courseTitle = course;
+					}
 					let html = `<div id="${course}" class="card">
 					<div class="card-body">
-					<h5 class="card-title">${course}</h5>
+					<h5 class="card-title">${courseTitle}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">${courseSubtitle}</h6>
 					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
 					</div>
 				</div>`
@@ -347,10 +375,10 @@ rhit.CoursePlanningController = class {
 					document.getElementById("springContainer").appendChild(element);
 					document.getElementById(course).addEventListener("mouseover", function () {
 						document.getElementById(course).querySelector(".btn").classList.remove("d-none");
-					}.bind(this));
+					});
 					document.getElementById(course).addEventListener("mouseout", function () {
 						document.getElementById(course).querySelector(".btn").classList.add("d-none");
-					}.bind(this));
+					});
 					document.getElementById(course + "Remove").addEventListener("click", function () {
 						this._userRef.get().then(function (doc) {
 							if (doc.exists){
@@ -375,9 +403,17 @@ rhit.CoursePlanningController = class {
 					}.bind(this));
 				}.bind(this));
 				doc.data().plan[currYear].Summer.forEach(function(course){
+					let indexOfSeperator = course.indexOf(":");
+					let courseTitle = course.substring(0, indexOfSeperator);
+					let courseSubtitle = course.substring(indexOfSeperator + 1);
+					if (indexOfSeperator == -1){
+						courseSubtitle = "";
+						courseTitle = course;
+					}
 					let html = `<div id="${course}" class="card">
 					<div class="card-body">
-					<h5 class="card-title">${course}</h5>
+					<h5 class="card-title">${courseTitle}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">${courseSubtitle}</h6>
 					<button id="${course}Remove"class="btn btn-danger d-none">Remove</button>
 					</div>
 				</div>`
@@ -463,11 +499,20 @@ rhit.CoursePlanningController = class {
 		}
 		for (let i = 0; i < allClasses.length; i++) {
 			let className = allClasses[i];
-			let html = `<div id="${className}" class="card">
-			<div class="card-body">
-			  <h5 class="card-title">${className}</h5>
-			</div>
-		  </div>`
+			let indexOfSeperator = className.indexOf(":");
+					let courseTitle = className.substring(0, indexOfSeperator);
+					let courseSubtitle = className.substring(indexOfSeperator + 1);
+					if (indexOfSeperator == -1){
+						courseSubtitle = "";
+						courseTitle = className;
+					}
+					let html = `<div id="${className}" class="card">
+					<div class="card-body">
+					<h5 class="card-title">${courseTitle}</h5>
+					<h6 class="card-subtitle mb-2 text-muted">${courseSubtitle}</h6>
+					<button id="${courseTitle}Remove"class="btn btn-danger d-none">Remove</button>
+					</div>
+				</div>`
 			let element = htmlToElement(html);
 			document.getElementById("dw-s1").appendChild(element);
 			document.getElementById(className).addEventListener("click", function () {
@@ -512,11 +557,9 @@ rhit.CoursePlanningController = class {
 							break;
 					}
 					for( var i = 0; i < currRequiredCourses.length; i++){ 
-    
 						if ( currRequiredCourses[i] === selectedClass) { 
 							currRequiredCourses.splice(i, 1); 
 						}
-					
 					}
 					this._userRef.update({
 						plan: currPlan,
@@ -529,7 +572,6 @@ rhit.CoursePlanningController = class {
 						this.populateRequired();
 					});
 				}
-					
 			});
 		}.bind(this));
 		document.getElementById("summerContainer").addEventListener("click", function () {
@@ -570,6 +612,7 @@ rhit.CoursePlanningController = class {
 						document.querySelectorAll(".selected").forEach(function (card) {
 							card.classList.remove("selected");
 						});
+						this.populateYears(currYear);
 						this.populateYears(currYear);
 						this.populateRequired();
 					});
@@ -687,6 +730,53 @@ rhit.main = function () {
 		}
 		if (document.querySelector("#coursePlanningPage")){
 			new rhit.CoursePlanningController();
+			document.querySelector("#exportToForm").onclick = (event) => {
+				firebase.firestore().collection(rhit.FB_COLLECTION_USER).doc(rhit.fbAuthManager.uid).get().then((doc) => {
+					if (doc.exists) {
+						let form = [];
+						let years = ["Y1", "Y2", "Y3", "Y4", "Y5"];
+						let quarters = ["Fall", "Winter", "Spring", "Summer"];
+						let plan = doc.data().plan;
+						for (let i = 0; i < years.length; i++) {
+							let year = [];
+							year.push(years[i]);
+							for (let j = 0; j < quarters.length; j++) {
+								if (j == 0){
+									year.push(quarters[j]);
+									for (let k = 0; k < plan[years[i]][quarters[j]].length; k++) {
+										let stringToAdd = plan[years[i]][quarters[j]][k].replace("#","");
+										year.push(stringToAdd);
+									}
+									form.push(year);
+								}else{
+									let otherYear = [];
+									otherYear.push(" ");
+									otherYear.push(quarters[j]);
+									for (let k = 0; k < plan[years[i]][quarters[j]].length; k++) {
+										let stringToAdd = plan[years[i]][quarters[j]][k].replace("#","");
+										otherYear.push(stringToAdd);
+									}
+									form.push(otherYear);
+								}
+							}
+						}
+						console.log(form);
+						const data = [
+							["Freshman", " ", " ", ""],
+							["Fall", "CSSE120", "ME123", "MA111 #", "HSSA", "MA111", "HSSA", "MA111", "HSSA", "MA111", "HSSA", "MA111", "HSSA"],
+							["Winter", "MA212", "MA212", "CSSE220", "ME480"],
+							["Winter", "MA212", "MA212", "CSSE220", "ME480"],
+							["Winter", "MA212", "MA212", "CSSE220", "ME480"],
+							["Winter", "MA212", "MA212", "CSSE220", "ME480"],
+							["Winter", "MA212", "MA212", "CSSE220", "ME480"],
+							["Spring", "MA212", "ME123", "CSSE280", "HSSA"]
+						];
+						console.log(data);
+						rhit.arrayToCSV(form);
+					}
+				});
+					
+			}
 		}
 		rhit.checkForRedirects();
 	});
@@ -724,6 +814,33 @@ function noDuplicates(a) {
         return seen.hasOwnProperty(item) ? false : (seen[item] = true);
     });
 }
+
+rhit.arrayToCSV = function (data) {
+	// let csvContent = "data:text/csv;charset=utf-8,";
+	// data.forEach(function(infoArray, index){
+	// 		dataString = infoArray.join(",");
+	// 		csvContent += index < infoArray.length ? dataString+ "\n" : dataString;
+	// 	});
+	let csvContent = "data:text/csv;charset=utf-8,";
+	data.forEach(function(rowArray) {
+    	let row = rowArray.join(",");
+    	csvContent += row + "\r\n";
+	});
+	// console.log(csvContent);
+	rhit.downlaodCSV(csvContent);
+};
+
+rhit.downlaodCSV = function (csvContent) {
+	var encodedUri = encodeURI(csvContent);
+	console.log(encodedUri);
+	window.open(encodedUri)
+	var encodedUri = encodeURI(csvContent);
+	var link = document.createElement("a");
+	link.setAttribute("href", encodedUri);
+	link.setAttribute("download", "my_Schedule.csv");
+	document.body.appendChild(link); // Required for FF
+	link.click();
+};
 
 
 
